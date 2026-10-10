@@ -1,4 +1,4 @@
--- ============================================================
+﻿-- ============================================================
 -- Практическая работа №1
 -- ФИО: Кураева Екатерина Алексеевна
 -- Группа: ИНБО-22-23
@@ -34,7 +34,7 @@ SELECT 'customers_pk_nulls', count(*) FROM olist.customers WHERE customer_id IS 
 SELECT 'products_pk_nulls', count(*) FROM olist.products WHERE product_id IS NULL UNION ALL
 SELECT 'sellers_pk_nulls', count(*) FROM olist.sellers WHERE seller_id IS NULL;
 
---Проверка ссылочной целостности (осиротевшие записи — должно быть 0)
+-- Проверка ссылочной целостности (осиротевшие записи — должно быть 0)
 SELECT 'orphan_order_items' AS check_name, count(*) AS orphan_count
 FROM olist.order_items oi 
 LEFT JOIN olist.orders o ON o.order_id = oi.order_id 
