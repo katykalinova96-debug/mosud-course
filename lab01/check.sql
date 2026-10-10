@@ -1,11 +1,11 @@
 -- ============================================================
--- Практическая работа №1
--- ФИО: Кураева Екатерина Алексеевна
--- Группа: ИНБО-22-23
--- Проверки целостности данных
+-- РџСЂР°РєС‚РёС‡РµСЃРєР°СЏ СЂР°Р±РѕС‚Р° в„–1
+-- Р¤РРћ: РљСѓСЂР°РµРІР° Р•РєР°С‚РµСЂРёРЅР° РђР»РµРєСЃРµРµРІРЅР°
+-- Р“СЂСѓРїРїР°: РРќР‘Рћ-22-23
+-- РџСЂРѕРІРµСЂРєРё С†РµР»РѕСЃС‚РЅРѕСЃС‚Рё РґР°РЅРЅС‹С…
 -- ============================================================
 
--- Сбор статистики для оптимизатора
+-- РЎР±РѕСЂ СЃС‚Р°С‚РёСЃС‚РёРєРё РґР»СЏ РѕРїС‚РёРјРёР·Р°С‚РѕСЂР°
 ANALYZE olist.customers;
 ANALYZE olist.geolocation;
 ANALYZE olist.orders;
@@ -16,7 +16,7 @@ ANALYZE olist.products;
 ANALYZE olist.sellers;
 ANALYZE olist.product_category_name_translation;
 
--- Количество строк во всех таблицах
+-- РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє РІРѕ РІСЃРµС… С‚Р°Р±Р»РёС†Р°С…
 SELECT 'customers' AS table_name, count(*) AS row_count FROM olist.customers UNION ALL
 SELECT 'geolocation', count(*) FROM olist.geolocation UNION ALL
 SELECT 'orders', count(*) FROM olist.orders UNION ALL
@@ -28,13 +28,13 @@ SELECT 'sellers', count(*) FROM olist.sellers UNION ALL
 SELECT 'product_category_name_translation', count(*) FROM olist.product_category_name_translation
 ORDER BY table_name;
 
--- Проверка на NULL в первичных ключах (должно быть 0)
+-- РџСЂРѕРІРµСЂРєР° РЅР° NULL РІ РїРµСЂРІРёС‡РЅС‹С… РєР»СЋС‡Р°С… (РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ 0)
 SELECT 'orders_pk_nulls' AS check_name, count(*) AS null_count FROM olist.orders WHERE order_id IS NULL UNION ALL
 SELECT 'customers_pk_nulls', count(*) FROM olist.customers WHERE customer_id IS NULL UNION ALL
 SELECT 'products_pk_nulls', count(*) FROM olist.products WHERE product_id IS NULL UNION ALL
 SELECT 'sellers_pk_nulls', count(*) FROM olist.sellers WHERE seller_id IS NULL;
 
---Проверка ссылочной целостности (осиротевшие записи — должно быть 0)
+--РџСЂРѕРІРµСЂРєР° СЃСЃС‹Р»РѕС‡РЅРѕР№ С†РµР»РѕСЃС‚РЅРѕСЃС‚Рё (РѕСЃРёСЂРѕС‚РµРІС€РёРµ Р·Р°РїРёСЃРё вЂ” РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ 0)
 SELECT 'orphan_order_items' AS check_name, count(*) AS orphan_count
 FROM olist.order_items oi 
 LEFT JOIN olist.orders o ON o.order_id = oi.order_id 

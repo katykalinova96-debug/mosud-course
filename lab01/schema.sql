@@ -1,8 +1,8 @@
--- ============================================================
--- Практическая работа №1
--- ФИО: Кураева Екатерина Алексеевна
--- Группа: ИНБО-22-23
--- Схема olist: создание таблиц и ключей
+п»ї-- ============================================================
+--                      1
+--    :                             
+--       :     -22-23
+--       olist:                         
 -- ============================================================
 CREATE SCHEMA IF NOT EXISTS olist;
 CREATE SCHEMA IF NOT EXISTS lab;
@@ -86,7 +86,7 @@ CREATE TABLE olist.product_category_name_translation (
     product_category_name_english text
 );
 
---Первичные ключи (PK)
+--                (PK)
 ALTER TABLE olist.customers ADD CONSTRAINT pk_customers PRIMARY KEY (customer_id); 
 ALTER TABLE olist.orders ADD CONSTRAINT pk_orders PRIMARY KEY (order_id); 
 ALTER TABLE olist.products ADD CONSTRAINT pk_products PRIMARY KEY (product_id); 
@@ -96,7 +96,7 @@ ALTER TABLE olist.order_items ADD CONSTRAINT pk_order_items PRIMARY KEY (order_i
 ALTER TABLE olist.order_payments ADD CONSTRAINT pk_order_payments PRIMARY KEY (order_id, payment_sequential); 
 ALTER TABLE olist.order_reviews ADD CONSTRAINT pk_reviews PRIMARY KEY (review_id, order_id);   
 
---Внешние ключи (FK)
+--              (FK)
 ALTER TABLE olist.orders ADD CONSTRAINT fk_orders_customer FOREIGN KEY (customer_id) REFERENCES olist.customers(customer_id); 
 ALTER TABLE olist.order_items ADD CONSTRAINT fk_items_order FOREIGN KEY (order_id) REFERENCES olist.orders(order_id); 
 ALTER TABLE olist.order_items ADD CONSTRAINT fk_items_product FOREIGN KEY (product_id) REFERENCES olist.products(product_id); 
