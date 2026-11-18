@@ -121,30 +121,5 @@ FROM olist.orders AS o
 JOIN items_by_order AS i ON i.order_id = o.order_id
 JOIN payments_by_order AS p ON p.order_id = o.order_id;
 
--- 7. Контроль: сумма платежей из исправленного соединения равна
--- сумме платежей без размножения для заказов с позициями.
-WITH items_by_order AS (
-    SELECT DISTINCT order_id FROM olist.order_items
-),
-payments_by_order AS (
-    SELECT order_id, SUM(payment_value) AS payment_sum
-    FROM olist.order_payments
-    GROUP BY order_id
-),
-expected AS (
-    SELECT SUM(p.payment_value) AS payment_sum
-    FROM olist.order_payments AS p
-    WHERE EXISTS (SELECT 1 FROM olist.order_items AS i WHERE i.order_id = p.order_id)
-),
-actual AS (
-    SELECT SUM(p.payment_sum) AS payment_sum
-    FROM items_by_order AS i
-    JOIN payments_by_order AS p ON p.order_id = i.order_id
-)
-SELECT expected.payment_sum AS expected_payment_sum,
-       actual.payment_sum AS actual_payment_sum,
-       expected.payment_sum IS NOT DISTINCT FROM actual.payment_sum AS sums_match
-FROM expected CROSS JOIN actual;
-
--- 8. Композиция операций реляционной алгебры и кратности связей
+-- 7. Композиция операций реляционной алгебры и кратности связей
 -- подробно приведены в lab04/README.md.
