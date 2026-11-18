@@ -14,6 +14,7 @@ WITH items_by_order AS (
     FROM olist.order_items
     GROUP BY order_id
 ),
+-- соединяем покупателей с заказами и данные о товарных позициях
 customer_orders AS (
     SELECT c.customer_unique_id,
            o.order_id,
@@ -25,6 +26,7 @@ customer_orders AS (
     WHERE c.customer_unique_id IS NOT NULL
       AND o.order_purchase_timestamp IS NOT NULL
 )
+-- количество заказов, первую и последнюю покупку и количество товарных позиций.    
 SELECT customer_unique_id,
        COUNT(*) AS orders_count,
        MIN(order_purchase_timestamp) AS first_purchase,
@@ -37,7 +39,7 @@ HAVING COUNT(*) >= 2
 ORDER BY orders_count DESC, customer_unique_id
 LIMIT 15;
 
--- 2. Общая статистика по повторным покупателям (без LIMIT).
+-- 2. Общая статистика по повторным покупателям, их количество, общее число покупателей и максимальное количество заказов на одного человека.
 WITH purchase_counts AS (
     SELECT c.customer_unique_id,
            COUNT(*) AS orders_count,
