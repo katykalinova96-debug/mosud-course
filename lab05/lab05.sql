@@ -65,7 +65,7 @@ JOIN target_states AS t ON t.state = s.customer_state
 GROUP BY s.product_category_name
 HAVING COUNT(DISTINCT s.customer_state) = (SELECT COUNT(*) FROM target_states);
 
--- 4. EXCEPT + NOT EXISTS: нет обязательного штата, отсутствующего в продажах.
+-- 4. EXCEPT + NOT EXISTS: находит недостающие штаты, проверяет, что после вычитания ничего не осталось
 CREATE TEMP TABLE lab05_by_except AS
 SELECT c.product_category_name
 FROM lab05_candidates AS c
