@@ -3,11 +3,9 @@
 -- Группа: ИНБО-22-23
 -- Вариант: 6
 -- Задача: найти заказы, у которых сумма платежей больше суммы
---         price + freight_value по товарным позициям заказа.
--- База: olist, схема исходных данных: olist.
--- Все запросы только читают данные; исходные таблицы не изменяются.
+-- price + freight_value по товарным позициям заказов с доставкой
 
--- 1–2. Основное решение: коррелированные скалярные подзапросы + EXISTS.
+-- 1–2. Основное решение: коррелированные скалярные подзапросы ддя расчета сумм платежей + EXISTS.
 -- Скалярные подзапросы для каждого order_id возвращают по одному числу:
 -- общую сумму платежей и общую стоимость позиций с доставкой.
 -- EXISTS проверяет, что у заказа есть платежи и товарные позиции.
@@ -16,13 +14,18 @@ CREATE OR REPLACE TEMP VIEW lab06_main AS
 WITH sums_by_order AS (
     SELECT
         o.order_id,
+    --сумм платежей
         (SELECT SUM(p.payment_value)
          FROM olist.order_payments AS p
          WHERE p.order_id = o.order_id) AS payment_total,
+    -- общая стоимость товаров вместе с доставкой
         (SELECT SUM(oi.price + oi.freight_value)
          FROM olist.order_items AS oi
          WHERE oi.order_id = o.order_id) AS items_total
     FROM olist.orders AS o
+    -- 2. Есть ли хотя бы один платеж?
+    -- Есть ли хотя бы одна товарная позиция?
+    -- Если обе true.
     WHERE EXISTS (
         SELECT 1
         FROM olist.order_payments AS p
@@ -34,11 +37,12 @@ WITH sums_by_order AS (
         WHERE oi.order_id = o.order_id
     )
 )
+-- условие платжеи больше расходов на товары и доставку
 SELECT order_id, payment_total, items_total
 FROM sums_by_order
 WHERE payment_total > items_total;
 
--- Сколько заказов удовлетворяют условию (основной способ)?
+-- Сколько заказов удовлетворяют условию (основной способ)
 SELECT COUNT(*) AS main_rows FROM lab06_main;
 
 -- Примеры подходящих заказов и разница сумм.
